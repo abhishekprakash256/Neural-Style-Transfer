@@ -6,6 +6,16 @@ The neural style transfer is implemented as per paper that came in 2015 title "A
 
 - Python, Pytorch and Pillow
 
+### Installation
+```
+git clone https://github.com/abhishekprakash256/Neural_style_transfer
+
+cd Neural_style_transfer/
+
+python3 main.py
+
+```
+
 ### Methodology 
 
 The process is started as a feature set is created using the features taken from the different convolution layer and in same manner the style is also extracted from the different CNN layers. The network used is the VGG-19, which has 16 CNN layers and 5 pool layers. The feature correlation is done by using the gram matrix. The loss is used to minimize the mean squared distance between the entries of the Gram matrix from the original image and the Gram matrix of the
