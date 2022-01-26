@@ -13,7 +13,6 @@ git clone https://github.com/abhishekprakash256/Neural_style_transfer
 cd Neural_style_transfer/
 
 python3 main.py
-
 ```
 
 ### Methodology 
