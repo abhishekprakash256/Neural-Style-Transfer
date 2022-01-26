@@ -5,6 +5,7 @@ The neural style transfer is implemented as per paper that came in 2015 title "A
 ### Requirement 
 
 - Python, Pytorch and Pillow
+- Check requirements.txt
 
 ### Installation
 ```
