@@ -29,15 +29,19 @@ loader = transforms.Compose(
 )
 
     
-#image loader 
+#image loader convert the image to tensor 
 def image_loader(image_name):
     image = Image.open(image_name)
     image = loader(image).unsqueeze(0)
     return image.to(device)
 
-
-
+#loading the images 
 original_img = image_loader(image_name = "content.jpeg")
+
+#the generated image
+generated = original_img.clone().requires_grad_(True)
 
 
 print(original_img)
+
+print(generated)
