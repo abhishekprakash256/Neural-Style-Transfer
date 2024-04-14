@@ -51,7 +51,7 @@ class VGG_model(nn.Module):
                 layers +=[nn.Conv2d(in_channels = in_channels , out_channels= out_channels , 
                 kernel_size= (3,3), 
                 stride = (1,1),
-                 padding =(1,1)),
+                padding =(1,1)),
                 nn.ReLU()]
 
                 in_channels = i
