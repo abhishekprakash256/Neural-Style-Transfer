@@ -38,15 +38,15 @@ optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 #print(net)
 
-
-
 #make the random tensor 
 
+input_height = 32  # Example height
+input_width = 32   # Example width
+batch_size = 16    # Example batch size
 
-random_tensor = torch.randn(3, 60, 60)
+# Generate a random tensor with the desired size
+random_tensor = torch.randn(batch_size, 3, input_height, input_width)
 
-
-print(random_tensor)
 
 res = net(random_tensor)
 
