@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-
+from torchvision.utils import save_image
 
 
 
@@ -19,6 +19,7 @@ class Net(nn.Module):
         self.fc1 = nn.Linear(16 * 5 * 5, 120)
         self.fc2 = nn.Linear(120, 84)
         self.fc3 = nn.Linear(84, 10)
+        self.fc4 = nn.Linear(in_features = 4096, out_features = 1000)
 
     def forward(self, x):
         x = self.pool(F.relu(self.conv1(x)))
@@ -45,40 +46,52 @@ input_width = 32   # Example width
 batch_size = 16    # Example batch size
 
 # Generate a random tensor with the desired size
-random_tensor = torch.randn(batch_size, 3, input_height, input_width)
+input_image1 = torch.randn(batch_size, 3, input_height, input_width)
+
+input_image2 = torch.randn(batch_size, 3, input_height, input_width)
+
+generated = torch.randn(batch_size, 3, input_height, input_width)
 
 
-res = net(random_tensor)
+total_steps = 2000
+learning_rate = 0.001
+alpha = 1 
+beta = 0.01
 
 
+for steps in range(total_steps):
+    generated_features = net(generated)
+    original_img_features = net(input_image1)
 
+    style_features = net(input_image2)
 
+    style_loss = original_loss = 0
 
+    for gen_feature, origL_feature , style_feature in zip(
+        generated_features, original_img_features,style_features
+    ):
 
-"""
+        channel , height , width = gen_feature.shape
 
-for epoch in range(2):  # loop over the dataset multiple times
+        original_loss += torch.mean((gen_feature - origL_feature) ** 2)
 
-    running_loss = 0.0
-    for i, data in enumerate(trainloader, 0):
-        # get the inputs; data is a list of [inputs, labels]
-        inputs, labels = data
+        G = gen_feature.view(channel, height*width).mm(
+            gen_feature.view(channel, height*width).t()
+        )
 
-        # zero the parameter gradients
-        optimizer.zero_grad()
+        A = style_feature.view(channel,  height*width).mm(
+            style_feature.view(channel, height*width).t()
+        )
 
-        # forward + backward + optimize
-        outputs = net(inputs)
-        loss = criterion(outputs, labels)
-        loss.backward()
-        optimizer.step()
+        style_loss += torch.mean((G-A)**2)
 
-        # print statistics
-        running_loss += loss.item()
-        if i % 2000 == 1999:    # print every 2000 mini-batches
-            print(f'[{epoch + 1}, {i + 1:5d}] loss: {running_loss / 2000:.3f}')
-            running_loss = 0.0
+    total_loss = alpha*original_loss + beta * style_loss
 
-print('Finished Training')
+    optimizer.zero_grad()
 
-"""
+    total_loss.backward()
+    optimizer.step()
+
+    if steps %200 == 0:
+        print(total_loss)
+        save_image(generated, "generated.png")
